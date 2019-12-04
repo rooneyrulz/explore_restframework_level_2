@@ -20,3 +20,30 @@ class TeacherListCreateAPIView(APIView):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(data=serializer.data, status=HTTP_201_CREATED)
+
+
+class TeacherObjectMixin(object):
+    def get_object(self, id, *args, **kwargs):
+        return get_object_or_404(Teacher, pk=id)
+
+
+class TeacherRetrieveUpdateDeleteAPIView(TeacherObjectMixin, APIView):
+    serializer = TeacherSerializer
+
+    def get(self, request, id, *args, **kwargs):
+        obj = self.get_object(id)
+        serializer = self.serializer(obj, many=False)
+        return Response(data=serializer.data, status=HTTP_200_OK)
+
+    def put(self, request, id, *args, **kwargs):
+        obj = self.get_object(id)
+        serializer = self.serializer(obj, data=request.data, many=False)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(data=serializer.data, status=HTTP_200_OK)
+
+    def delete(self, request, id, *args, **kwargs):
+        obj = self.get_object(id)
+        obj.delete()
+        return Response(data='teacher deleted!', status=HTTP_200_OK)
+

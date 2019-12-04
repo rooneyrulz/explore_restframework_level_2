@@ -17,10 +17,9 @@ class StudentListCreateAPIView(APIView):
 
     def post(self, request, id=None, *args, **kwargs):
         serializer = self.serializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(data=serializer.data, status=HTTP_201_CREATED)
-        return Response(data=serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
 class StudentObjectMixin(object):
@@ -39,10 +38,9 @@ class StudentRetrieveUpdateDeleteAPIView(StudentObjectMixin, APIView):
     def put(self, request, id, *args, **kwargs):
         obj = self.get_object(id)
         serializer = self.serializer(obj, data=request.data, many=False)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(data=serializer.data, status=HTTP_200_OK)
-        return Response(data=serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     def delete(self, request, id, *args, **kwargs):
         obj = self.get_object(id)
