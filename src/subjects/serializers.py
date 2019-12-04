@@ -1,15 +1,11 @@
 from rest_framework import serializers
-
-from .models import Teacher
-from subjects.models import Subject
+from .models import Subject
 
 
-class TeacherSerializer(serializers.ModelSerializer):
-    subjects = serializers.PrimaryKeyRelatedField(many=True, queryset=Subject.objects.all())
-
+class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Teacher
-        fields = ('id', 'name', 'country', 'student', 'subjects',)
+        model = Subject
+        fields = ('id', 'name', 'teacher',)
 
     read_only_fields = ('id',)
 
